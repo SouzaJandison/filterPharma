@@ -19,6 +19,7 @@ class DrugstoreController {
       cep,
       city,
       uf,
+      neighborhood,
       password 
     } = req.body;
 
@@ -40,6 +41,7 @@ class DrugstoreController {
       cep,
       city,
       uf,
+      neighborhood,
       password
     });
     await repository.save(drugstore);

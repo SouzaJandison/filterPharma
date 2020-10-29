@@ -11,6 +11,7 @@ export default {
       cep: drugstore.cep,
       city: drugstore.city,
       uf: drugstore.uf,
+      neighborhood: drugstore.neighborhood
     };
   }
 }

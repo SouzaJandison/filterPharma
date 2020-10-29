@@ -28,6 +28,9 @@ class Drugstore {
   uf: string;
 
   @Column()
+  neighborhood: string;
+
+  @Column()
   password: string;
 
   @BeforeInsert()

@@ -43,6 +43,10 @@ export class CreateDrugstoreTable1603995752046 implements MigrationInterface {
           type: 'varchar'
         },
         {
+          name: 'neighborhood',
+          type: 'varchar'
+        },
+        {
           name: 'password',
           type: 'varchar'
         }
