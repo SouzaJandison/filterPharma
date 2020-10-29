@@ -1,14 +1,14 @@
 import { Router } from 'express';
 
-import authMiddleware from './middleware/authMiddleware';
+//import authMiddleware from './middleware/authMiddleware';
 
-import UserController from './controllers/UserController';
-import AuthController from './controllers/AuthController';
+import DrugstoreController from './controllers/DrugstoreController';
+import SessionController from './controllers/SessionController';
 
 const router = Router();
 
-router.post('/users', UserController.store);
-router.post('/auth', AuthController.authenticate);
-router.get('/users', authMiddleware, UserController.index);
+router.post('/users', DrugstoreController.create);
+router.post('/session', SessionController.create);
+//router.get('/users', authMiddleware, UserController.index);
 
 export { router };
