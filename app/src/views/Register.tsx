@@ -1,10 +1,15 @@
 import React, { FormEvent, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import InputMask from 'react-input-mask';
+import axios from 'axios';
+
+
 import {FiArrowLeft} from 'react-icons/fi';
 
 import api from '../services/api';
 
 import '../styles/register.css';
+import { parse } from 'path';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -17,13 +22,22 @@ export default function Register() {
   const [neighborhood, setNeighborhood] = useState('');
   const [password, setPassword] = useState('');
 
+  const [registerErr, setRegisterErr] = useState('');
+  const [cepErr, setCepErr] = useState('');
+  const [classNameErr, setClassNameErr] = useState('');
+
+  const [disabledCity, setDisabledCity] = useState(false);
+  const [disabledUf, setDisabledUf] = useState(false);
+  const [disabledNeighborhood, setDisabledNeighborhood] = useState(false);
+
   const history = useHistory();
 
   async function handleRegister(event: FormEvent) {
     event.preventDefault();
+    setRegisterErr('');
 
     try {
-      const result = await api.post('drugstore', {
+      await api.post('drugstore', {
         name,
         cnpj,
         email,
@@ -36,9 +50,39 @@ export default function Register() {
       });
 
       alert('Cadastro Realizado com sucesso!')
+
       history.push('/')
     } catch(err) {
-      console.log(err)
+      setRegisterErr('Erro no Cadastro tente novamente');
+    }
+  }
+
+  async function getCep(cep: string) {
+    setCepErr('');
+    setClassNameErr('');
+    const cepFormat = cep.replace('-', '');
+    
+    const result = await axios.get(`https://viacep.com.br/ws/${cepFormat}/json/`);
+    
+    if(result.data.erro) {
+      setCepErr('CEP invalido!');
+      setClassNameErr('error');
+
+      setCity('');
+      setUf('');
+      setNeighborhood('');
+
+      setDisabledCity(false);
+      setDisabledUf(false);
+      setDisabledNeighborhood(false);
+    } else {
+      setCity(result.data.localidade);
+      setUf(result.data.uf);
+      setNeighborhood(result.data.bairro);
+
+      setDisabledCity(true);
+      setDisabledUf(true);
+      setDisabledNeighborhood(true);
     }
   }
 
@@ -55,13 +99,16 @@ export default function Register() {
           </Link>
         </section>
         <form onSubmit={handleRegister}>
+          <span className="text-error">{registerErr}</span>
           <input 
             placeholder="Nome da drogaria" 
             value={name}
             onChange={ e => setName(e.target.value) }
           />
-          <input 
+          <InputMask 
             placeholder="CNPJ" 
+            mask="99.999.999/9999-99"
+            maskChar=""
             value={cnpj}
             onChange={ e => setCnpj(e.target.value) }
           />
@@ -70,31 +117,42 @@ export default function Register() {
             value={email}
             onChange={ e => setEmail(e.target.value) }
           />
-          <input 
+          <InputMask 
             placeholder="Telefone" 
+            mask="(99) 99999-9999"
+            maskChar=""
             value={phoneNumber}
             onChange={ e => setPhoneNumber(e.target.value) }
           />
-          <input 
+          <InputMask 
             placeholder="CEP" 
+            mask="99999-999"
+            maskChar=""
             value={cep}
             onChange={ e => setCep(e.target.value) }
+            onBlur={ e => getCep(e.target.value) }
+            className={classNameErr}
           />
+          <span className="text-error">{cepErr}</span>
           <div className="input-group">
             <input 
               placeholder="Cidade" 
+              disabled={disabledCity}
               value={city}
               onChange={ e => setCity(e.target.value) }
             />
             <input 
               style={ {width: 80, textTransform: 'uppercase'} }
               placeholder="UF"
+              disabled={disabledUf}
+              maxLength={2}
               value={uf}
               onChange={ e => setUf(e.target.value) }
             />
           </div>
           <input 
             placeholder="Bairro" 
+            disabled={disabledNeighborhood}
             value={neighborhood}
             onChange={ e => setNeighborhood(e.target.value) }
           />

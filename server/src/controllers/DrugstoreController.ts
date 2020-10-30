@@ -8,6 +8,34 @@ class DrugstoreController {
   // index(req: Request, res: Response) {
   //   return res.json({ userId: req.userId });
   // }
+  // async index(req: Request, res: Response) {
+  //   const repository = getRepository(Drugstore);
+  //   const {email, cnpj } = req.body;
+
+  //   if(email) {
+  //     const drugstoreEmailExists = await repository.findOne({ where: { email } });
+
+  //     if(!drugstoreEmailExists) {
+  //       return res.json({
+  //         status: false,
+  //         message: 'E-mail já cadastrado!'
+  //       });
+  //     };
+  //   }
+
+  //   if(cnpj) {
+  //     const drugstoreCnpjExists = await repository.findOne({ where: { cnpj } });
+
+  //     if(!drugstoreCnpjExists) {
+  //       return res.json({
+  //         status: false,
+  //         message: 'CNPJ já cadastrado!'
+  //       });
+  //     };
+  //   }
+
+  //   return res.json({ status: true })
+  // }
 
   async create(req: Request, res: Response) {
     const repository = getRepository(Drugstore);
@@ -25,13 +53,19 @@ class DrugstoreController {
 
     const drugstoreEmailExists = await repository.findOne({ where: { email } });
     if(drugstoreEmailExists) {
-      return res.status(409).json({ message: 'E-mail already registered' });
+      return res.status(409).json({
+        error: 'email',
+        message: 'E-mail already registered'
+      });
     };
 
-    const drugstoreCnpjExists = await repository.findOne({ where: { cnpj } })
+    const drugstoreCnpjExists = await repository.findOne({ where: { cnpj } });
     if(drugstoreCnpjExists) {
-      return res.status(409).json({ message: 'CNPJ already registered' })
-    }
+      return res.status(409).json({
+        error: 'cnpj',
+        message: 'CNPJ already registered'
+      });
+    };
 
     const drugstore = repository.create({
       name,
