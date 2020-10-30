@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 
 import Drugstore from '../app/models/Drugstore';
+import { schemaDrugstoreCreate } from  '../validations/drugstore_validation';
 import drugstore_view from '../views/drugstore_view';
 
 class DrugstoreController {
@@ -38,7 +39,6 @@ class DrugstoreController {
   // }
 
   async create(req: Request, res: Response) {
-    const repository = getRepository(Drugstore);
     const { 
       name,
       cnpj,
@@ -50,6 +50,24 @@ class DrugstoreController {
       neighborhood,
       password 
     } = req.body;
+
+    const data = {
+      name,
+      cnpj,
+      email,
+      phoneNumber,
+      cep,
+      city,
+      uf,
+      neighborhood,
+      password
+    }
+
+    await schemaDrugstoreCreate.validate(data, {
+      abortEarly: false
+    })
+
+    const repository = getRepository(Drugstore);
 
     const drugstoreEmailExists = await repository.findOne({ where: { email } });
     if(drugstoreEmailExists) {
@@ -67,17 +85,7 @@ class DrugstoreController {
       });
     };
 
-    const drugstore = repository.create({
-      name,
-      cnpj,
-      email,
-      phoneNumber,
-      cep,
-      city,
-      uf,
-      neighborhood,
-      password
-    });
+    const drugstore = repository.create(data);
     await repository.save(drugstore);
 
     return res.json(drugstore_view.render(drugstore));
