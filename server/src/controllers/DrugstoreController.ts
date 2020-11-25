@@ -89,7 +89,7 @@ class DrugstoreController {
     await repository.save(drugstore);
 
     return res.json(drugstore_view.render(drugstore));
-  }
-}
+  };
+};
 
 export default new DrugstoreController();

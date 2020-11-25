@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap');
+
+body {
+  background-color: #e7e7ec;
+}
+
+.menu-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  min-width: 1200px;
+  height: 80px;
+  padding: 0 40px;
+
+  background-color: #333;
+}
+
+.title-logo {
+  font: 400 28px Luckiest Guy, sans-serif;
+  color: #adadad;
+}
+
+.user-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  max-width: 250px;
+}
+
+.newProduct-top {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 30px 60px 0 60px;
+}
+
+.newProduct-top .title {
+  font-size: 24px;
+  font-weight: bold;
+
+  color: #333333;
+}
+
+.product-option {
+  display: flex;
+}
+
+.product-option-item {
+  display: flex;
+  align-items: center;
+}
+
+.product-option-item span {
+  color: #333333;
+}
+
+.product-delete {
+  padding-right: 20px;
+}
+
+.newProduct-list-info {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 0 60px;
+}
+
+.data-client {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 600px;
+}
+
+.data-client-item {
+  padding: 5px 0 5px 10px;
+}
+
+.data-client-item label {
+  font-weight: bold;
+}
+
+.data-buy {
+  display: flex;
+  flex-direction: column;
+
+  width: 100%;
+  max-width: 400px;
+}
+
+.product-value {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  padding: 5px 10px;
+}
+
+.product-value span {
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.produto-buy-info {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 5px 30px;
+}
+
+.produto-buy-info span {
+  font-size: 16px;
+}
+
+.newProduct-list-table {
+  display: flex;
+
+  padding: 30px 60px;
+}
+
+.data-table {
+  width: 100%;
+}
+
+.radio-option {
+  display: flex;
+  
+  padding: 5px 0 15px 10px;
+}
+
+.radio-option .radio-option-title {
+  font-weight: bold;
+}
+
+.radio-option-item {
+  padding: 0 10px;
+}
+
+.sub-option {
+  display: flex;
+
+  padding: 5px 0 15px 10px;
+}
+
+.sub-option label {
+  font-weight: bold;
+}
+
+.sub-option-item {
+  padding: 0 20px 0 0;
+}
+
+.sub-option-item input {
+  box-shadow: 0 0 0 0;
+  border: 0 none;
+  outline: 0;
+
+  padding: 10px;
+  width: 250px;
+  height: 20px;
+
+  border-radius: 7px;
+}
+
+.sub-option-item select {
+  box-shadow: 0 0 0 0;
+  border: 0 none;
+  outline: 0;
+
+  width: 200px;
+  height: 20px;
+
+  border-radius: 7px;
+
+  text-align-last: center;
+}

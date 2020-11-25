@@ -9,7 +9,7 @@ import {FiArrowLeft} from 'react-icons/fi';
 import api from '../services/api';
 
 import '../styles/register.css';
-import { parse } from 'path';
+// import { parse } from 'path';
 
 export default function Register() {
   const [name, setName] = useState('');
