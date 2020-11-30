@@ -94,6 +94,13 @@ th {
   background: #002855;
 }
 
+tr:nth-child(even) {
+  background: #FFF
+}
+tr:nth-child(odd) {
+  background: #EEE
+}
+
 td {
   text-align: center;
 }
@@ -124,14 +131,22 @@ td {
   color: #ffffff;
 }
 
-.td-category-icon-hb {
-  background: blue;
+.td-category-icon-g {
+  background: yellow;
+  color: #000;
 }
 
-.td-category-icon-otc {
+.td-category-icon-et {
   background: blueviolet;
 }
 
-.td-category-icon-rx {
+.td-category-icon-sl {
   background: forestgreen;
+}
+
+.button-table {
+  border: none;
+  outline: none;
+  background: none;
+  cursor: pointer;
 }

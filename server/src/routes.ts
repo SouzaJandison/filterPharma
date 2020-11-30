@@ -9,10 +9,10 @@ import ProductController from './controllers/ProductController';
 const router = Router();
 
 router.post('/drugstore', DrugstoreController.create);
-//router.get('/verify', DrugstoreController.index);
+router.get('/auth', DrugstoreController.index);
 router.post('/session', SessionController.create);
 //router.get('/users', authMiddleware, UserController.index);
 
-router.get('/list', ProductController.show);
+router.post('/list', ProductController.show);
 
 export { router };

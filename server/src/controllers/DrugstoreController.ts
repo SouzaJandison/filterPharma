@@ -4,39 +4,21 @@ import { getRepository } from 'typeorm';
 import Drugstore from '../app/models/Drugstore';
 import { schemaDrugstoreCreate } from  '../validations/drugstore_validation';
 import drugstore_view from '../views/drugstore_view';
+import HandleFiles from '../utils/handleFiles'; 
 
 class DrugstoreController {
-  // index(req: Request, res: Response) {
-  //   return res.json({ userId: req.userId });
-  // }
-  // async index(req: Request, res: Response) {
-  //   const repository = getRepository(Drugstore);
-  //   const {email, cnpj } = req.body;
+ async index(req: Request, res: Response) {
+  const drugstore_id = req.headers.authorization;
+  const repository = getRepository(Drugstore);
 
-  //   if(email) {
-  //     const drugstoreEmailExists = await repository.findOne({ where: { email } });
+  const drugstore = await repository.findOne({ where: { id: drugstore_id }});
+  
+  if(!drugstore) return res.sendStatus(401);
 
-  //     if(!drugstoreEmailExists) {
-  //       return res.json({
-  //         status: false,
-  //         message: 'E-mail já cadastrado!'
-  //       });
-  //     };
-  //   }
+  const medicine = await HandleFiles.readFile();
 
-  //   if(cnpj) {
-  //     const drugstoreCnpjExists = await repository.findOne({ where: { cnpj } });
-
-  //     if(!drugstoreCnpjExists) {
-  //       return res.json({
-  //         status: false,
-  //         message: 'CNPJ já cadastrado!'
-  //       });
-  //     };
-  //   }
-
-  //   return res.json({ status: true })
-  // }
+  return res.json(medicine);
+ }
 
   async create(req: Request, res: Response) {
     const { 

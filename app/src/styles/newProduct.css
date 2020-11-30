@@ -17,9 +17,17 @@ body {
   background-color: #333;
 }
 
+.user-infor {
+  color: #adadad;
+}
+
 .title-logo {
   font: 400 28px Luckiest Guy, sans-serif;
-  color: #adadad;
+  margin-right: 30px;
+}
+
+.message-welcome {
+  font: normal 20px Luckiest Guy, sans-serif;
 }
 
 .user-content {
@@ -29,6 +37,37 @@ body {
 
   width: 100%;
   max-width: 250px;
+}
+
+.user-config {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-config:hover .user-config-box{
+ display: block;
+}
+
+.user-config-box {
+  display: none;
+  position: absolute;
+  right: 5px;
+  top: 56px;
+  width: 200px;
+  height: 200px;
+  background-color: #ffffff;
+  border-radius: 15px;
+}
+
+.user-config-box ul li {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+.user-config-box ::before {
+  content: '';
+
 }
 
 .newProduct-top {
@@ -52,14 +91,18 @@ body {
 .product-option-item {
   display: flex;
   align-items: center;
+  cursor: pointer;
+  margin-left: 35px;
+  padding: 5px;
+  border-radius: 7px;
 }
 
 .product-option-item span {
   color: #333333;
 }
 
-.product-delete {
-  padding-right: 20px;
+.product-option-item:hover {
+  background-color: #ddd;
 }
 
 .newProduct-list-info {
@@ -83,6 +126,10 @@ body {
 
 .data-client-item label {
   font-weight: bold;
+}
+
+.data-client-item span {
+  text-transform: uppercase;
 }
 
 .data-buy {
@@ -179,4 +226,24 @@ body {
   border-radius: 7px;
 
   text-align-last: center;
+}
+
+.sub-option-item button {
+  height: 20px;
+
+  padding: 0 10px;
+
+  background: gray;
+  border: 0;
+  border-radius: 8px;
+  color: #ffffff;
+
+  outline: none;
+
+  transition: filter 0.2s;
+  cursor: pointer;
+}
+
+.sub-option-item button:hover {
+  filter: brightness(90%);
 }
