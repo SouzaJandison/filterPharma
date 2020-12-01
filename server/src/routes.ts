@@ -13,6 +13,8 @@ router.get('/auth', DrugstoreController.index);
 router.post('/session', SessionController.create);
 //router.get('/users', authMiddleware, UserController.index);
 
-router.post('/list', ProductController.show);
+router.post('/list', ProductController.index);
+router.post('/product', ProductController.create);
+router.get('/product/:id', ProductController.show);
 
 export { router };

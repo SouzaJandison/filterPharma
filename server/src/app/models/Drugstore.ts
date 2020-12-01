@@ -1,5 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, BeforeInsert, BeforeUpdate } from 'typeorm';
+import { 
+  Entity, 
+  PrimaryGeneratedColumn, 
+  Column, 
+  BeforeInsert, 
+  BeforeUpdate, 
+  OneToMany, 
+  JoinColumn 
+} from 'typeorm';
 import bcrypt from 'bcryptjs';
+
+import Product from './Product';
 
 @Entity('drugstores')
 class Drugstore {
@@ -32,6 +42,13 @@ class Drugstore {
 
   @Column()
   password: string;
+
+  @OneToMany(() => Product, product => product.drugstore, {
+    cascade: ['insert', 'update']
+  })
+
+  @JoinColumn({ name: 'drugstore_id' })
+  products: Product[];
 
   @BeforeInsert()
   @BeforeUpdate()

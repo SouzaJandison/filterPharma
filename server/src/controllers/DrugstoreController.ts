@@ -30,7 +30,7 @@ class DrugstoreController {
       city,
       uf,
       neighborhood,
-      password 
+      password
     } = req.body;
 
     const data = {
