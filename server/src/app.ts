@@ -1,8 +1,3 @@
-import * as dotenv from 'dotenv';
-dotenv.config({
-  path: process.env.NODE_ENV === 'test' ? 'path.env.test' : '.env' 
-});
-
 import 'reflect-metadata';
 import express from 'express';
 import 'express-async-errors';

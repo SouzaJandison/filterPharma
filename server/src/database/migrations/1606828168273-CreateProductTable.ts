@@ -34,6 +34,10 @@ export class CreateProductTable1606828168273 implements MigrationInterface {
           type: 'varchar'
         },
         {
+          name: 'amount',
+          type: 'interger'
+        },
+        {
           name: 'id_drugstore',
           type: 'varchar'
         },

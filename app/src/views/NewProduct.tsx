@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, ChangeEvent } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { FiUser, FiShoppingBag, FiShoppingCart, FiCheck, FiTrash, FiPlusSquare, FiXSquare } from 'react-icons/fi';
 
@@ -69,11 +69,27 @@ export default function NewProduct() {
     return "td-category-icon";
   }
 
+  async function addProduct(id: number) {
+    const product = medicine.find(item => item.id === id);
+    console.log(product?.code)
+
+    const data = {
+      code: product?.code,
+      description: product?.description,
+      value: product?.value,
+      category: product?.category,
+      laboratory: product?.laboratory,
+      id_drugstore: drugstoreId,
+      drugstore: drugstoreId
+    }
+
+    const response = await api.post('/product', data);
+  }
+
   function handleLogout() {
     localStorage.clear();
     history.push('/');
   }
-  // const drugstoreEmail = localStorage.getItem('drugstoreEmail');
   
   return(
     <div className="home-container">
@@ -254,7 +270,12 @@ export default function NewProduct() {
                       <td>{item.code}</td>
                       <td>{item.description}</td>
                       <td>{item.quantity}</td>
-                      <td><div className={item.stock === "Disponivel" ? "td-circle td-circle-green" : "td-circle td-circle-red"}></div></td>
+                      <td>
+                        <div 
+                          className={item.stock === "Disponivel" ? "td-circle td-circle-green" : "td-circle td-circle-red"}
+                        >
+                        </div>
+                      </td>
                       <td>R$ {item.value}</td>
                       <td>
                         <div className={styleCategoryIcon(item.category)}>
@@ -265,7 +286,7 @@ export default function NewProduct() {
                       <td>
                         <button 
                           className="button-table"
-                          onClick={ () => alert('add') }
+                          onClick={ () => addProduct(item.id) }
                         >
                           <FiPlusSquare size={32} color="green"/>
                         </button>

@@ -1,8 +1,7 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
-import { number } from 'yup';
 
-import Product from '../app/models/Product';
+import Product from '../models/Product';
 import HandleFiles from '../utils/handleFiles'; 
 
 interface IDatabase {
@@ -18,8 +17,8 @@ interface IDatabase {
 
 class ProductController {
   async index(req: Request, res: Response) {
-    let data: IDatabase[] = await HandleFiles.readFile();
     const { name, laboratory, category } = req.body;
+    let data: IDatabase[] = await HandleFiles.readFile();
 
     if(name) {
       data = data.filter(item => {
@@ -38,7 +37,7 @@ class ProductController {
     return res.json(data);
   }
 
-  async create(req: Request, res: Response) {
+  async add(req: Request, res: Response) {
     const {
       code,
       description,
@@ -48,8 +47,44 @@ class ProductController {
       id_drugstore,
       drugstore
     } = req.body;
+    const productRepository = getRepository(Product);
 
-    const data = {
+    let data = {
+      code,
+      description,
+      value,
+      category,
+      laboratory,
+      id_drugstore,
+      drugstore,
+      amount: 1
+    };
+
+    const listProduct = await productRepository.find({ id_drugstore });
+
+    if(listProduct.length > 0) {
+      var update = false;
+      listProduct.forEach(item => {
+        if(item.code === code) {
+          update = true;
+          data.amount = item.amount + 1;
+        }
+      });
+    }
+
+    if(update) {
+      await productRepository.update({ code }, data);
+      return res.status(201).json({ message: 'update successful' });
+    }
+
+    const product = productRepository.create(data);
+    productRepository.save(product);
+    
+    return res.status(201).json({ message: 'created with successful' });
+  }
+
+  async remove(req: Request, res: Response) {
+    const {
       code,
       description,
       value,
@@ -57,14 +92,42 @@ class ProductController {
       laboratory,
       id_drugstore,
       drugstore
-    };
-
+    } = req.body;
     const productRepository = getRepository(Product);
 
-    const product = productRepository.create(data);
-    productRepository.save(product);
+    let data = {
+      code,
+      description,
+      value,
+      category,
+      laboratory,
+      id_drugstore,
+      drugstore,
+      amount: 0
+    };
+
+    const listProduct = await productRepository.find({ id_drugstore });
+
+    if(listProduct.length === 0) return res.json({ message: 'no product for delete' });
+
+    if(listProduct.length > 0) {
+      let del = false;
+      listProduct.forEach(item => {
+        if(item.code === code && item.amount <= 1) {
+          del = true;
+        }else if(item.code === code) {
+          data.amount = item.amount - 1;
+        };
+      });
+
+      del 
+        ? await productRepository.delete({ code })
+        : await productRepository.update({ code }, data);
+
+      return res.status(201).json({ message: 'delete successful' });
+    }
     
-    return res.status(201).json(product);
+    return res.json({ message: 'no product found' });
   }
 
   async show(req: Request, res: Response) {

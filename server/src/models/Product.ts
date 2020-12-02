@@ -23,6 +23,9 @@ class Product {
   laboratory: string;
 
   @Column()
+  amount: number;
+
+  @Column()
   id_drugstore: string;
 
   @ManyToOne(() => Drugstore, drugstore => drugstore.products)

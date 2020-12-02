@@ -1,25 +1,25 @@
 import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 
-import Drugstore from '../app/models/Drugstore';
+import Drugstore from '../models/Drugstore';
 import { schemaDrugstoreCreate } from  '../validations/drugstore_validation';
 import drugstore_view from '../views/drugstore_view';
 import HandleFiles from '../utils/handleFiles'; 
 
 class DrugstoreController {
- async index(req: Request, res: Response) {
-  const drugstore_id = req.headers.authorization;
-  const repository = getRepository(Drugstore);
+  async index(req: Request, res: Response) {
+    const id = req.headers.authorization;
+    const repository = getRepository(Drugstore);
 
-  const drugstore = await repository.findOne({ where: { id: drugstore_id }});
+    const drugstore = await repository.findOne({ where: { id }});
+    
+    if(!drugstore) return res.sendStatus(401).json({ message: 'unauthorized access' });
+
+    const medicine = await HandleFiles.readFile();
+
+    return res.json(medicine);
+  }
   
-  if(!drugstore) return res.sendStatus(401);
-
-  const medicine = await HandleFiles.readFile();
-
-  return res.json(medicine);
- }
-
   async create(req: Request, res: Response) {
     const { 
       name,
@@ -32,6 +32,7 @@ class DrugstoreController {
       neighborhood,
       password
     } = req.body;
+    const repository = getRepository(Drugstore);
 
     const data = {
       name,
@@ -48,8 +49,6 @@ class DrugstoreController {
     await schemaDrugstoreCreate.validate(data, {
       abortEarly: false
     })
-
-    const repository = getRepository(Drugstore);
 
     const drugstoreEmailExists = await repository.findOne({ where: { email } });
     if(drugstoreEmailExists) {
@@ -71,7 +70,7 @@ class DrugstoreController {
     await repository.save(drugstore);
 
     return res.json(drugstore_view.render(drugstore));
-  };
+  }
 };
 
 export default new DrugstoreController();

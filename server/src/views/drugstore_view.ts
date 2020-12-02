@@ -1,4 +1,4 @@
-import Drugstore from '../app/models/Drugstore';
+import Drugstore from '../models/Drugstore';
 
 export default {
   render(drugstore:  Drugstore) {

@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'fs';
+import { readFile } from 'fs';
 import * as path from 'path';
 import { promisify } from 'util' ;
 
