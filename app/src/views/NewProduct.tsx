@@ -1,21 +1,15 @@
-import React, { useState, useEffect, ChangeEvent } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { FiUser, FiShoppingBag, FiShoppingCart, FiCheck, FiTrash, FiPlusSquare, FiXSquare } from 'react-icons/fi';
+import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { FiPlusSquare, FiXSquare } from 'react-icons/fi';
+
+import Menu from '../components/Menu';
+import NewProductTop from '../components/NewProductTop';
+import NewProductUserInfor from '../components/NewProductUserInfor';
 
 import api from '../services/api'; 
+import { IMedicine, IProduct } from '../types/interface';
 
 import '../styles/newProduct.css';
-
-interface IMedicine {
-  id: number;
-  code: string;
-  description: string;
-  quantity: string;
-  stock: string;
-  value: string;
-  category: string;
-  laboratory: string;
-}
 
 export default function NewProduct() {
   const drugstoreName = localStorage.getItem('drugstoreName');
@@ -27,6 +21,10 @@ export default function NewProduct() {
   const [nameMedicineInput, setNameMedicineInput] = useState("");
   const [selectedOptionLab, setSelectedOptionLab] = useState("");
   const [selectedOptionCategory, setSelectedOptionCategory] = useState("");
+  const [shoppingCartValue, setShoppingCartValue] = useState(0.00);
+  const [shoppingCartItems, setShoppingCartItems] = useState(0);
+  const [shoppingCartItemQuantity, setShoppingCartItemQuantity] = useState(0);
+
 
   const history = useHistory();
 
@@ -37,8 +35,25 @@ export default function NewProduct() {
       }
     }).then(response => {
       setMedicine(response.data);
-    }).catch(err => {
+    }).catch(() => {
       history.push('/');
+    });
+  }, [drugstoreId]);
+
+  useEffect(() => {
+    api.get(`/product/${drugstoreId}`).then( response => {
+      const data: IProduct[] = response.data
+      let value = 0;
+      let itemQuantity = 0;
+
+      data.forEach(item => {
+        value = (value + (item.value * item.amount));
+        itemQuantity = itemQuantity + item.amount;
+      })
+
+      setShoppingCartValue(value);
+      setShoppingCartItems(response.data.length);
+      setShoppingCartItemQuantity(itemQuantity);
     });
   }, [drugstoreId]);
 
@@ -48,7 +63,7 @@ export default function NewProduct() {
       laboratory: nameLab,
       category: nameCategory
     });
-    console.log(response.data)
+
     setMedicine(response.data);
   }
 
@@ -69,130 +84,83 @@ export default function NewProduct() {
     return "td-category-icon";
   }
 
-  async function addProduct(id: number) {
-    const product = medicine.find(item => item.id === id);
-    console.log(product?.code)
-
+  async function addProduct(
+    code: string, 
+    description: string,
+    value: string,
+    category: string,
+    laboratory: string
+  ) {
     const data = {
-      code: product?.code,
-      description: product?.description,
-      value: product?.value,
-      category: product?.category,
-      laboratory: product?.laboratory,
+      code,
+      description,
+      value,
+      category,
+      laboratory,
       id_drugstore: drugstoreId,
       drugstore: drugstoreId
     }
 
-    const response = await api.post('/product', data);
-  }
+    await api.post('/productAdd', data);
 
-  function handleLogout() {
-    localStorage.clear();
-    history.push('/');
-  }
+    await updateDataShoppingCart();
+  };
+
+  async function removeProduct(
+    code: string, 
+    description: string,
+    value: string,
+    category: string,
+    laboratory: string
+  ) {
+    const data = {
+      code,
+      description,
+      value,
+      category,
+      laboratory,
+      id_drugstore: drugstoreId,
+      drugstore: drugstoreId
+    }
+
+    await api.post('/productRemove', data);
+
+    await updateDataShoppingCart();
+  };
+
+  async function updateDataShoppingCart() {
+    const response = await api.get(`/product/${drugstoreId}`);
+    const data: IProduct[] = response.data;
+    let value = 0;
+    let itemQuantity = 0;
+
+    data.forEach(item => {
+      value = value + (item.value * item.amount);
+      itemQuantity = itemQuantity + item.amount;
+    })
+
+    setShoppingCartValue(value);
+    setShoppingCartItems(data.length);
+    setShoppingCartItemQuantity(itemQuantity);
+  };
   
   return(
-    <div className="home-container">
-      <div className="menu-top">
-        <div className="user-infor">
-          <span className="title-logo">FilterPharma</span>
-          <span className="message-welcome">Bem Vindo, {drugstoreName}</span>
-        </div>
-        <div className="user-content">
-          <FiShoppingCart size={32} color="#adadad"/>
-          <FiShoppingBag size={32} color="#adadad"/>
-          <div className="user-config">
-            <FiUser size={32} color="#adadad"/>
-            <div className="user-config-box">
-              <ul>
-                <li>
-                  <button
-                    className="button-table"
-                    onClick={handleLogout}
-                  >
-                    Sair
-                  </button>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div className="newProduct-content">
-        <div className="newProduct-top">
-          <span className="title">NOVO PEDIDO</span>
-          <div className="product-option">
-            <div 
-              className="product-option-item"
-              onClick={() => alert('Teste delete pedido')}
-            >
-              <span>EXCLUIR PEDIDO</span>
-              <FiTrash size={32} color="#333333"/>
-            </div>
-            <div 
-              className="product-option-item"
-              onClick={() => alert('Teste enviar pedido')}
-            >
-              <span>ENVIAR PEDIDO</span>
-              <FiCheck size={32} color="#333333"/>
-            </div>
-          </div>
-        </div>
+    <div>
+      <Menu drugstoreName={drugstoreName} />
+      <div>
+        <NewProductTop />
         <div className="newProduct-list">
-          <div className="newProduct-list-info">
-            <fieldset className="data-client">
-              <legend>Farmácia</legend>
-              <div className="data-client-item">
-                <label>Farmácia: </label>
-                <span>{drugstoreName}</span>
-              </div>
-              <div className="data-client-item">
-                <label>CD: </label>
-                <span>{drugstoreCity} - {drugstoreUf}</span>
-              </div>
-              <div className="data-client-item">
-                <label>UF: </label>
-                <span>{drugstoreUf}</span>
-              </div>
-              <div className="data-client-item">
-                <label>SITUAÇÃO: </label>
-                <span>LIBERADO</span>
-              </div>
-            </fieldset>
-            <fieldset className="data-buy">
-              <legend>Carrinho</legend>
-              <div className="product-value">
-                <FiShoppingCart size={64} color="gray"/>
-                <span>R$ 0,00</span>
-              </div>
-              <div className="produto-buy-info">
-                <span><strong>TOTAL DE ITENS: </strong>0</span>
-                <span><strong>TOTAL DE UNIDADES: </strong>0</span>
-              </div>
-            </fieldset>
-          </div>
+          <NewProductUserInfor 
+            drugstoreName={drugstoreName}
+            drugstoreCity={drugstoreCity}
+            drugstoreUf={drugstoreUf}
+            shoppingCartValue={shoppingCartValue}
+            shoppingCartItems={shoppingCartItems}
+            shoppingCartItemQuantity={shoppingCartItemQuantity}
+          />
           <div className="newProduct-list-table">
             <fieldset className="data-table">
               <legend>Produtos</legend>
-              {/* <div className="radio-option">
-                <label className="radio-option-title">CONDIÇÃO:</label>
-                <div className="radio-option-item">
-                  <input type="radio" name="option" value="1"/>
-                  <label> MINHA CONDIÇÃO</label>
-                </div>
-                <div className="radio-option-item">
-                  <input type="radio" name="option" value="2"/>
-                  <label> OFERTA</label>
-                </div>
-                <div className="radio-option-item">
-                  <input type="radio" name="option" value="3"/>
-                  <label> MELHOR DESCONTO</label>
-                </div>
-                <div className="radio-option-item">
-                  <input type="radio" name="option" value="4"/>
-                  <label> MELHOR DESC. PRAZO CLIENTE</label>
-                </div>
-              </div> */}
               <div className="sub-option">
                 <div className="sub-option-item">
                   <label>PRODUTO: </label>
@@ -263,7 +231,6 @@ export default function NewProduct() {
                     <th>LABORATÓRIO</th>
                     <th></th>
                     <th></th>
-                    <th>QTD CARRINHO</th>
                   </tr>
                   {medicine.map(item => (
                     <tr key={item.id}>
@@ -286,20 +253,47 @@ export default function NewProduct() {
                       <td>
                         <button 
                           className="button-table"
-                          onClick={ () => addProduct(item.id) }
+                          disabled={
+                            Number(item.quantity) <= 0 ? true : false
+                          }
+                          onClick={ () => addProduct(
+                            item.code, 
+                            item.description,
+                            item.value,
+                            item.category,
+                            item.laboratory
+                          ) }
                         >
-                          <FiPlusSquare size={32} color="green"/>
+                          <FiPlusSquare 
+                            size={32} 
+                            color={
+                              Number(item.quantity) <= 0 ? "gray" : "green"
+                            }
+                          />
                         </button>
                       </td>
                       <td>
                         <button 
                           className="button-table"
-                          onClick={ () => alert('remove') }
+                          disabled={
+                            Number(item.quantity) <= 0 ? true : false
+                          }
+                          onClick={ () => removeProduct(
+                            item.code, 
+                            item.description,
+                            item.value,
+                            item.category,
+                            item.laboratory
+                          ) }
                         >
-                          <FiXSquare size={32} color="red"/>
+                          <FiXSquare 
+                            size={32} 
+                            color={
+                              Number(item.quantity) <= 0 ? "gray" : "red"
+                            }
+                          />
                         </button>
                       </td>
-                      <td>0</td>
                     </tr>
                   ))}
                 </tbody>

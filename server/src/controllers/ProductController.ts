@@ -10,7 +10,7 @@ interface IDatabase {
   description: string;
   quantity: string;
   stock: string;
-  value: string;
+  value: number;
   category: string;
   laboratory: string;
 }

@@ -14,7 +14,7 @@ class Product {
   description: string;
 
   @Column()
-  value: string;
+  value: number;
   
   @Column()
   category: string;

@@ -1,0 +1,34 @@
+.newProduct-top {
+  display: flex;
+  justify-content: space-between;
+
+  padding: 30px 60px 0 60px;
+}
+
+.newProduct-top .title {
+  font-size: 24px;
+  font-weight: bold;
+
+  color: #333333;
+}
+
+.product-option {
+  display: flex;
+}
+
+.product-option-item {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  margin-left: 35px;
+  padding: 5px;
+  border-radius: 7px;
+}
+
+.product-option-item span {
+  color: #333333;
+}
+
+.product-option-item:hover {
+  background-color: #ddd;
+}

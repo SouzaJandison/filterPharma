@@ -1,0 +1,69 @@
+.menu-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  min-width: 1200px;
+  height: 80px;
+  padding: 0 40px;
+
+  background-color: #333;
+}
+
+.user-infor {
+  color: #adadad;
+}
+
+.link-page {
+  text-decoration: none;
+  color: #adadad;
+}
+
+.link-page .title-logo {
+  font: 400 28px Luckiest Guy, sans-serif;
+  margin-right: 30px;
+}
+
+.message-welcome {
+  font: normal 20px Luckiest Guy, sans-serif;
+}
+
+.user-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  width: 100%;
+  max-width: 250px;
+}
+
+.user-config {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-config:hover .user-config-box{
+ display: block;
+}
+
+.user-config-box {
+  display: none;
+  position: absolute;
+  right: 5px;
+  top: 56px;
+  width: 200px;
+  height: 200px;
+  background-color: #ffffff;
+  border-radius: 15px;
+}
+
+.user-config-box ul li {
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+.user-config-box ::before {
+  content: '';
+}

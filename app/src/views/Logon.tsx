@@ -19,12 +19,12 @@ export default function Logon() {
     try {
       const response = await api.post('/session', { email, password });
 
-      localStorage.setItem('drugstoreName', response.data.drugstore.name)
-      localStorage.setItem('drugstoreId', response.data.drugstore.id)
-      localStorage.setItem('drugstoreEmail', response.data.drugstore.email)
-      localStorage.setItem('drugstorePhoneNumber', response.data.drugstore.phoneNumber)
-      localStorage.setItem('drugstoreCity', response.data.drugstore.city)
-      localStorage.setItem('drugstoreUf', response.data.drugstore.uf)
+      localStorage.setItem('drugstoreName', response.data.name)
+      localStorage.setItem('drugstoreId', response.data.id)
+      localStorage.setItem('drugstoreEmail', response.data.email)
+      localStorage.setItem('drugstorePhoneNumber', response.data.phoneNumber)
+      localStorage.setItem('drugstoreCity', response.data.city)
+      localStorage.setItem('drugstoreUf', response.data.uf)
 
       history.push('/home');
     } catch(err) {

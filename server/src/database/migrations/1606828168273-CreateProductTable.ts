@@ -23,7 +23,7 @@ export class CreateProductTable1606828168273 implements MigrationInterface {
         },
         {
           name: 'value',
-          type: 'varchar'
+          type: 'integer'
         },
         {
           name: 'category',
